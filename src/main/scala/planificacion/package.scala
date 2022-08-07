@@ -1,7 +1,6 @@
 package object planificacion {
 
   import datos._
-  import scala.collection._
 //----------------------------------------------- definicion tipos datos-----------------------------------------------
   type ListaVuelos= List[Vuelo]
   type Itinerario= ListaVuelos
@@ -33,14 +32,14 @@ package object planificacion {
   //-----------------------------funciones auxiliares para la función itinerariosTiempo--------------------------------
 
   /**
-   * Halla la duración del vuelo (HH,MM)
+   * Halla la diferencia entre la hora de partida y la de llegada  (HH,MM)
    * @param HS hora salida
    * @param MS minutos salida
    * @param HL hora llegada
    * @param ML minutos llegada
    * @return duración (horas,minutos)
    */
-  def tiempoNormal(HS: Int, MS: Int, HL: Int, ML: Int): (Int, Int)= {
+  def lapsoTiempo(HS: Int, MS: Int, HL: Int, ML: Int): (Int, Int)= {
     val duracion= {
       val min1= 60-(ML-MS)
       val min2= 60-(MS-ML)
@@ -66,20 +65,20 @@ package object planificacion {
    * @param ML minutos llegada
    * @return duración (horas,minutos)
    */
-  def diferenciaTiempo(h1: Int, m1: Int, h2: Int, m2: Int): (Int, Int) =
+  def diferenciaTiempo(HS: Int, MS: Int, HL: Int, ML: Int): (Int, Int) =
   {
     var diferencia: (Int, Int) = (0, 0)
 
-    if (h1 == h2 && m1 == m2) {
+    if (HS == HL && MS == ML) {
       diferencia = (0, 0)
-    } else if (h1 < h2) {
-      diferencia = tiempoNormal(h1: Int, m1: Int, h2: Int, m2: Int)
-    } else if (h1 > h2) {
-      diferencia = calculadoraTiempo1((24, 0), tiempoNormal(h1, m1, h2, m2))
-    } else if (h1 == h2 && m1 > m2) {
-      diferencia = calculadoraTiempo1((24, 0), tiempoNormal(h2, h1, m2, m1))
-    } else if (h1 == h2 && m1 <= m2) {
-      diferencia = tiempoNormal(h1: Int, m1: Int, h2: Int, m2: Int)
+    } else if (HS < HL) {
+      diferencia = lapsoTiempo(HS: Int, MS: Int, HL: Int, ML: Int)
+    } else if (HS > HL) {
+      diferencia = tiempo1((24, 0), lapsoTiempo(HS, MS, HL, ML))
+    } else if (HS == HL && MS > ML) {
+      diferencia = tiempo1((24, 0), lapsoTiempo(HL, HS, ML, MS))
+    } else if (HS == HL && MS <= ML) {
+      diferencia = lapsoTiempo(HS: Int, MS: Int, HL: Int, ML: Int)
     }
     diferencia
   }
@@ -90,15 +89,15 @@ package object planificacion {
    * @param vuelos
    * @return
    */
-  def diferenciaTiempoTierra(vuelos: List[Vuelo]): (Int, Int) = {
+  def tiempoTierra(vuelos: List[Vuelo]): (Int, Int) = {
     if (vuelos.isEmpty || vuelos.length == 1) {
       (0, 0)
     } else {
-      val hora1 = vuelos.head.HL
-      val min1 = vuelos.head.ML
-      val hora2 = vuelos(1).HS
-      val min2 = vuelos(1).MS
-      diferenciaTiempo(hora1, min1, hora2, min2)
+      val horaLlegada = vuelos.head.HL
+      val minutosLlegada = vuelos.head.ML
+      val horaSalida = vuelos(1).HS
+      val minutosSalida = vuelos(1).MS
+      diferenciaTiempo(horaLlegada, minutosLlegada, horaSalida, minutosSalida)
     }
   }
 
@@ -113,16 +112,16 @@ package object planificacion {
 
     for (i <- vuelos.indices) {
 
-      val hora1 = vuelos(i).HS
-      val min1 = vuelos(i).MS
-      val hora2 = vuelos(i).HL
-      val min2 = vuelos(i).ML
+      val horaSalida = vuelos(i).HS
+      val minutosSalida = vuelos(i).MS
+      val horaLlegada = vuelos(i).HL
+      val minutosLegada = vuelos(i).ML
 
       if (i == vuelos.length - 1) {
-        tiempo = calculadoraTiempo2(tiempo, diferenciaTiempo(hora1, min1, hora2, min2))
+        tiempo = tiempo2(tiempo, diferenciaTiempo(horaSalida, minutosSalida, horaLlegada, minutosLegada))
       } else {
-        tiempo = calculadoraTiempo2(tiempo, calculadoraTiempo2(diferenciaTiempo(hora1, min1, hora2, min2),
-          diferenciaTiempoTierra(List(vuelos(i), vuelos(i + 1)))))
+        tiempo = tiempo2(tiempo, tiempo2(diferenciaTiempo(horaSalida, minutosSalida, horaLlegada, minutosLegada),
+          tiempoTierra(List(vuelos(i), vuelos(i + 1)))))
       }
 
     }
@@ -137,7 +136,7 @@ package object planificacion {
    * @param dos
    * @return
    */
-  def calculadoraTiempo1(uno: (Int, Int), dos: (Int, Int)): (Int, Int) = {
+  def tiempo1(uno: (Int, Int), dos: (Int, Int)): (Int, Int) = {
 
     var hora = 0
     var minutos = 0
@@ -157,12 +156,12 @@ package object planificacion {
   }
 
   /**
-   *
+   * Calcular la duración de varios vuelos
    * @param uno
    * @param dos
    * @return
    */
-  def calculadoraTiempo2(uno: (Int, Int), dos: (Int, Int)): (Int, Int) = {
+  def tiempo2(uno: (Int, Int), dos: (Int, Int)): (Int, Int) = {
 
     var hora = 0
     var minutos = 0
@@ -219,6 +218,5 @@ package object planificacion {
     }
     resultado
   }
-
 
 }
