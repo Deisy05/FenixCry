@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PlanificacionDeVuelos.iml" filepath="$PROJECT_DIR$/.idea/modules/PlanificacionDeVuelos.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PlanificacionDeVuelos-build.iml" filepath="$PROJECT_DIR$/.idea/modules/PlanificacionDeVuelos-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/planificacionDeVuelos.iml" filepath="$PROJECT_DIR$/.idea/modules/planificacionDeVuelos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/planificacionDeVuelos-build.iml" filepath="$PROJECT_DIR$/.idea/modules/planificacionDeVuelos-build.iml" />
     </modules>
   </component>
 </project>

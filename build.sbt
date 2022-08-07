@@ -1,4 +1,4 @@
-name := "PlanificacionDeVuelos"
+name := "planificacionDeVuelos"
 
 version := "0.1"
 
