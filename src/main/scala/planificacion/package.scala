@@ -41,17 +41,13 @@ package object planificacion {
    */
   def lapsoTiempo(HS: Int, MS: Int, HL: Int, ML: Int): (Int, Int)= {
     val duracion= {
-      val min1= 60-(ML-MS)
-      val min2= 60-(MS-ML)
-      if(HS<HL){
-        if(MS<ML)((HL-HS)-1, min1)
-        else ((HL-HS)-1, min2)
-      }else if (HS>HL){
-        if(MS<ML)(23-HS+HL, min1)
-        else (23-HS+HL, min2)
-      }else{
-        if(MS<ML)(24, min1)
-        else (24, min2)
+
+      if(HS<=HL){
+        if(MS<=ML)((HL-HS), ML-MS)
+        else ((HL-HS)-1, 60-(MS-ML))
+      }else {
+        if(MS<=ML)(24-(HS-HL),ML-MS)
+        else (23-(HS-HL),60-(MS-ML) )
       }
     }
     duracion
